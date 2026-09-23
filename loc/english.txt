@@ -1,0 +1,22 @@
+{
+	"RDAI_options" : "Redone AI",
+	"RDAI_options_desc" : "Configure Redone AI",
+
+	"RDAI_ai_tickrate" : "Enemy AI Tickrate",
+	"RDAI_ai_tickrate_desc" : "Adjusts the amount of enemy logic updates that can be done per second\nHigher values are more difficult but may impact performance. Vanilla default is 60",
+
+	"RDAI_masochism" : "Masochism Mode",
+	"RDAI_masochism_desc" : "Enemies will be allowed to path ahead and will no longer have any movement delays\nKeeping them constantly on the move",
+
+	"RDAI_old_fades" : "Old Fade Behaviour",
+	"RDAI_old_fades_desc" : "Restores assault fades to the way they worked prior to U173",
+
+	"RDAI_spawngroups" : "Reworked Spawngroups",
+	"RDAI_spawngroups_desc" : "Restores removed units and changes enemy group compositions to be similar to old versions of PD2\nRequires a game restart to take effect",
+
+	"RDAI_cover_wait_time" : "Enemy Cover Wait Time",
+	"RDAI_cover_wait_time_desc" : "Adjusts the minimum amount of time (in seconds) enemies will wait in cover before advancing\nThe maximum amount of time is calculated as minimum * 1.5",
+
+	"RDAI_enemy_spawn_interval" : "Enemy Spawn Interval",
+	"RDAI_enemy_spawn_interval_desc" : "Adjusts the time (in seconds) between spawning of enemy groups\nValues below 2s are not recommended"
+}

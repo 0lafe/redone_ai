@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<mod name="Redone AI">
+	<hooks script_path="mod.lua">
+		<post hook_id="lib/managers/group_ai_states/groupaistatebase"/>
+		<post hook_id="lib/managers/group_ai_states/groupaistatebesiege"/>
+		<post hook_id="lib/managers/mission/elementspawnenemygroup"/>
+		<post hook_id="lib/managers/mission/elementspecialobjective"/>
+		<post hook_id="lib/managers/enemymanager"/>
+		<post hook_id="lib/managers/menumanager"/>
+		<post hook_id="lib/tweak_data/groupaitweakdata"/>
+		<post hook_id="lib/units/civilians/logics/civilianlogictravel"/>
+		<post hook_id="lib/units/enemies/cop/copbrain"/>
+		<post hook_id="lib/units/enemies/cop/copmovement"/>
+		<post hook_id="lib/units/enemies/cop/actions/full_body/copactiondodge"/>
+		<post hook_id="lib/units/enemies/cop/actions/full_body/copactionhurt"/>
+		<post hook_id="lib/units/enemies/cop/actions/upper_body/copactiontase"/>
+		<post hook_id="lib/units/enemies/cop/actions/lower_body/copactionidle"/>
+		<post hook_id="lib/units/enemies/cop/actions/lower_body/copactionwalk"/>
+		<post hook_id="lib/units/enemies/cop/logics/coplogicbase"/>
+		<post hook_id="lib/units/enemies/cop/logics/coplogicidle"/>
+		<post hook_id="lib/units/enemies/cop/logics/coplogictravel"/>
+		<post hook_id="lib/units/enemies/medic/actions/upper_body/medicactionheal"/>
+		<post hook_id="lib/units/enemies/shield/logics/shieldlogicattack"/>
+		<post hook_id="lib/units/enemies/spooc/actions/lower_body/actionspooc"/>
+		<post hook_id="lib/units/enemies/spooc/logics/spooclogicattack"/>
+		<post hook_id="lib/units/enemies/tank/logics/tankcoplogicattack"/>
+		<post hook_id="lib/units/enemies/taser/logics/taserlogicattack"/>
+		<post hook_id="lib/units/player_team/logics/teamailogictravel"/>
+	</hooks>
+
+	<tweak definition="xml/std.animation_states"/>
+	<tweak definition="xml/std.animation_subset"/>
+</mod>

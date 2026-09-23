@@ -1,0 +1,14 @@
+-- Lets medics keep moving and acting while healing, instead of committing to the
+-- heal and standing still. MedicDamage requests the heal with blocks = {action = -1},
+-- and MedicActionHeal:init turns that into self._blocks, so dropping chk_block is
+-- what releases it.
+--
+-- This is one half of the feature -- the other half is the tweak in
+-- xml/std.animation_subset, which sets the "heal" anim's blend_set to
+-- "upper_body_aim" so the lower body stays free to walk. Removing either half
+-- alone leaves medics half-frozen.
+--
+-- Safe to nil even though MedicActionHeal = class() has no parent to fall back
+-- on: every caller guards with `action.chk_block and action:chk_block(...)`
+-- (copmovement.lua:1077, huskcopmovement.lua:57).
+MedicActionHeal.chk_block = nil
