@@ -1990,9 +1990,6 @@ function CopActionWalk:_chk_correct_pose()
 	end
 
 	if not pose then
-		-- No pose at all: adopt whichever one this character is allowed to use
-		-- (vanilla does the same via _fallback_pose). Without this the request
-		-- below would be built with type = opposite_pose[nil], i.e. type = nil.
 		self._ext_movement:action_request({
 			no_sync = true,
 			body_part = 4,

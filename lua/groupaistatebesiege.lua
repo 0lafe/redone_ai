@@ -665,9 +665,6 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 				local detonate_pos
 
 				if charge then
-					-- Vanilla picks the first non-deployable criminal; without the filter a
-					-- charging group can end up lobbing its grenade at a sentry gun, and
-					-- table.random_key on an empty set would index nil.
 					for criminal_key, criminal_data in pairs_g(assault_area.criminal.units) do
 						local record = self._criminals[criminal_key]
 
@@ -693,11 +690,6 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 				end
 			end
 
-			-- Only hold a push back for grenade cover if the group can actually produce
-			-- cover. Otherwise a group with neither smoke/flash nor the charge tactic
-			-- would never be told to move in at all -- which is what happens on vanilla
-			-- tactics, i.e. whenever the spawngroups setting is off and
-			-- groupaitweakdata.lua bails out before redefining _tactics.
 			local can_make_cover = false
 
 			for _, u_data in pairs_g(group.units) do

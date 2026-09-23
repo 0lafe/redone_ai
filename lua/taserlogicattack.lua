@@ -66,22 +66,10 @@ function TaserLogicAttack._upd_enemy_detection(data)
 	local tasing = my_data.tasing
 
 	if tasing then
-		-- Stay locked on the victim while the tase is landing or already in effect.
-		-- Vanilla also breaks off here when three or more other detected enemies have
-		-- damaged us in the last 1.2s; that break-off is deliberately not restored.
 		if tasing.target_u_data.unit:movement():tased() or data.t - tasing.start_t < math.max(1, data.char_tweak.weapon.is_rifle.aim_delay_tase[2] * 1.5) then
 			return
 		end
 
-		-- Past the aim-delay window with nothing tased: drop the attempt. CopActionTase
-		-- has no timeout of its own -- it only expires on on_attention, on the target
-		-- going down, or on a broken ray while discharging. If the target sprints out of
-		-- tase_distance or breaks LOS during the aim delay, the action just idles with
-		-- _shoot_t still set, and with this function, _upd_aim and queued_update all
-		-- returning early on my_data.tasing, nothing would ever clear it -- the taser
-		-- freezes. _cancel_tase_attempt interrupts the action, and CopMovement fires
-		-- action_complete_clbk synchronously (copmovement.lua:1154), so my_data.tasing
-		-- is already nil by the time the rest of this function runs.
 		TaserLogicAttack._cancel_tase_attempt(data, my_data)
 	end
 

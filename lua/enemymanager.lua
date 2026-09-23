@@ -1,10 +1,6 @@
 -- Defer entirely to ThinkFaster if it is installed
 if not _G.ThinkFaster then
 	function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_clbk, asap)
-		-- Fast path: with nothing else pending and nothing already run this frame,
-		-- run the task now instead of waiting for the next queue tick. update()
-		-- clears _queued_task_executed every frame, so this can only re-enter once
-		-- per frame.
 		if not execute_t and #self._queued_tasks == 0 and not self._queued_task_executed then
 			self._queued_task_executed = true
 
@@ -27,15 +23,6 @@ if not _G.ThinkFaster then
 		})
 	end
 
-	-- Vanilla's implementation with the tick rate taken from RDAI settings instead
-	-- of tweak_data.group_ai.ai_tick_rate.
-	--
-	-- The loop structure matters: _execute_queued_task table.remove()s the entry it
-	-- runs, so iterating _queued_tasks with a plain ipairs and executing inside it
-	-- silently skips whichever task shifts into the vacated slot. The checked-set +
-	-- break + restart below is what vanilla does to avoid that, and it only shows up
-	-- once the tick rate is raised far enough to run several tasks in one frame --
-	-- which is exactly what the ai_tickrate slider is for.
 	function EnemyManager:_update_queued_tasks(t, dt)
 		self._queue_buffer = self._queue_buffer + dt
 
@@ -78,8 +65,7 @@ if not _G.ThinkFaster then
 			self:_execute_queued_task(i_asap_task)
 		end
 
-		-- Clamp, so the buffer cannot accumulate while tasks are pending but not yet
-		-- due and then dump a burst in one frame.
+		-- Clamp, so the buffer cannot accumulate while tasks are pending but not yet due and then dump a burst in one frame.
 		self._queue_buffer = #queued_tasks == 0 and 0 or math.min(self._queue_buffer, tick_rate * #queued_tasks)
 
 		local next_callback = self._delayed_clbks[#self._delayed_clbks]

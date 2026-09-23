@@ -264,7 +264,7 @@ function CopLogicTravel.action_complete_clbk(data, action)
 				my_data.best_cover[4] = high_ray
 				my_data.in_cover = true
 
-				-- Same bounds as the enter hook above; see the note there.
+				-- Same bounds as the enter hook above
 				if not RDAI.settings.masochism then
 					local cover_wait_t = my_data.cover_wait_t or {
 						RDAI.settings.cover_wait_time,

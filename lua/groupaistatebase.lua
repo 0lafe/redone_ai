@@ -1,7 +1,6 @@
 local math_lerp = math.lerp
 local math_min = math.min
 local math_random = math.random
-local mvec3_set_z = mvector3.set_z
 local table_remove = table.remove
 
 Hooks:PostHook(GroupAIStateBase, "criminal_spotted", "RDAI_criminal_spotted", function(self, unit)

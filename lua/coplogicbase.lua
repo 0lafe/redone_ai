@@ -202,10 +202,7 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 							notice_delay_mul = notice_delay_mul * attention_info.settings.detection.delay_mul
 						end
 
-						-- Vanilla adds the peer's ping here for husk players:
-						--   notice_delay_modified = notice_delay_modified + ping/1000 + 0.02
-						-- That is the "enemies ignore me for a moment" grace period clients get and
-						-- the host never does. Deliberately skipped for now; revisit after testing.
+						-- Another removal for client peers
 						local notice_delay_modified = math_lerp(min_delay * notice_delay_mul, max_delay, dis_mul_mod + angle_mul_mod)
 
 						delta_prog = notice_delay_modified > 0 and dt / notice_delay_modified or 1
@@ -299,21 +296,12 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 				elseif verified then
 					attention_info.release_t = nil
 					attention_info.verified_t = t
-					-- Must copy INTO the owned vector. attention_pos is the handler's live
-					-- _m_detect_pos; assigning it would make verified_pos track the target in
-					-- real time and defeat the whole point of a "last seen" position.
 					mvec3_set(attention_info.verified_pos, attention_pos)
 					attention_info.last_verified_pos = mvec3_copy(attention_pos)
 					attention_info.verified_dis = dis
 				elseif data.enemy_slotmask and attention_info.unit:in_slot(data.enemy_slotmask) then
 					if attention_info.criminal_record and REACT_COMBAT <= attention_info.settings.reaction then
-						-- LIKELY BUG (left as-is for play testing): 490000 is 700^2, so this was
-						-- meant to be mvector3.distance_sq -- the original aliased mvector3.distance
-						-- twice by mistake. Vanilla is: distance(...) > 700. With a linear distance
-						-- the test never passes, so an attention object whose shared criminal_record
-						-- position has drifted far from where we last saw them is never dropped --
-						-- i.e. enemies never lose track. Only matters outside an active assault,
-						-- since is_detection_persistent() is true while a wave is running.
+						-- 490000 might be an error, worth checking later
 						if not is_detection_persistent and mvec3_distance(attention_pos, attention_info.criminal_record.pos) > 490000 then
 							CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 						else
@@ -424,7 +412,6 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 	end
 
 	local test_pos = tmp_vec1
-	local unused_4 -- unused, kept for bytecode parity
 
 	mvec3_set(test_pos, dodge_dir)
 	mvec3_multiply(test_pos, 130)

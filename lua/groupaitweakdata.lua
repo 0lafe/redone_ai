@@ -6,10 +6,6 @@ Hooks:PostHook(GroupAITweakData, "_init_unit_categories", "RDAI_init_unit_catego
 	local access_type_walk_only = {
 		walk = true
 	}
-	local access_type_walk_acrobatic = {
-		acrobatic = true,
-		walk = true
-	}
 
 	self.unit_categories.CS_cop_C45_R870 = {
 		unit_types = {
