@@ -11,16 +11,6 @@ local tmp_vec = Vector3()
 
 Hooks:PostHook(CopLogicTravel, "enter", "RDAI_enter", function(data)
 	local old_internal_data = data.internal_data
-
-	-- Note: this slider is the *upper* bound, not the lower one. math.rand(a, b) is
-	-- `math.random() * (b - a) + a` (core/lib/utils/coremath.lua), so passing
-	-- (x, x / 2) returns a uniform value in [x/2, x]. The menu description calls the
-	-- slider a minimum and says the maximum is minimum * 1.5 -- neither matches what
-	-- this actually does. Behaviour is left exactly as the original mod shipped it;
-	-- only the description is inaccurate.
-	--
-	-- internal_data.cover_wait_t only ever exists on team AI (teamailogictravel.lua
-	-- sets {0, 0} for follow_unit objectives), so for cops the fallback always wins.
 	if not RDAI.settings.masochism then
 		local cover_wait_t = old_internal_data.cover_wait_t or {
 			RDAI.settings.cover_wait_time,
@@ -486,9 +476,10 @@ function CopLogicTravel._get_exact_move_pos(data, nav_index, ...)
 end
 
 function CopLogicTravel._begin_coarse_pathing(data, my_data)
-	-- Flag follows the search result: a declined search must not leave the unit
-	-- stuck in "processing" forever.
-	my_data.processing_coarse_path = data.unit:brain():search_for_coarse_path(my_data.coarse_path_search_id, data.objective.follow_unit and data.objective.follow_unit:movement():nav_tracker():nav_segment() or data.objective.nav_seg, my_data.path_safely and callback(CopLogicTravel, CopLogicTravel, "_investigate_coarse_path_verify_clbk")) or nil
+	-- Prevent infinite loop of gathering paths
+	my_data.processing_coarse_path = true
+
+	data.unit:brain():search_for_coarse_path(my_data.coarse_path_search_id, data.objective.follow_unit and data.objective.follow_unit:movement():nav_tracker():nav_segment() or data.objective.nav_seg, my_data.path_safely and callback(CopLogicTravel, CopLogicTravel, "_investigate_coarse_path_verify_clbk"))
 end
 
 function CopLogicTravel.clbk_pathing_results(data)

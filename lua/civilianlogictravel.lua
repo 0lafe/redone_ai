@@ -84,11 +84,15 @@ function CivilianLogicTravel.update(data)
 								position = mvec3_copy(next_pos)
 							})
 
-							my_data.processing_advance_path = unit:brain():search_for_path(my_data.advance_path_search_id, next_pos)
+							my_data.processing_advance_path = true
+
+							unit:brain():search_for_path(my_data.advance_path_search_id, next_pos)
 						end
 					end
 				else
-					my_data.processing_coarse_path = unit:brain():search_for_coarse_path(my_data.coarse_path_search_id, objective.follow_unit and objective.follow_unit:movement():nav_tracker():nav_segment() or objective.nav_seg)
+					my_data.processing_coarse_path = true
+
+					unit:brain():search_for_coarse_path(my_data.coarse_path_search_id, objective.follow_unit and objective.follow_unit:movement():nav_tracker():nav_segment() or objective.nav_seg)
 				end
 			else
 				CopLogicBase._exit(unit, "idle")
