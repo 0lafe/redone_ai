@@ -83,7 +83,13 @@ Hooks:OverrideFunction(CopLogicTravel, "upd_advance", function(data)
 					CopLogicTravel._begin_coarse_pathing(data, my_data)
 				end
 			else
-				CopLogicBase._exit(data.unit, data.logic._get_logic_state_from_reaction(data) or "idle")
+				local wanted_state = data.logic._get_logic_state_from_reaction(data) or "idle"
+
+				if not data.unit:brain():get_logic_by_name(wanted_state) then
+					wanted_state = "idle"
+				end
+				
+				CopLogicBase._exit(data.unit, wanted_state)
 			end
 		elseif data.attention_obj and REACT_SCARED <= data.attention_obj.reaction and (not my_data.best_cover or not my_data.best_cover[4]) and not unit:anim_data().crouch and (not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.crouch) then
 			CopLogicAttack._chk_request_action_crouch(data)
