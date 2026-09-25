@@ -9,9 +9,9 @@
 	"blt_version" : 2,
 	"updates" : [
 		{
-			"identifier" : "redone_enemy_ai",
+			"identifier" : "redone_ai",
 			"host" : {
-				"meta" : "https://raw.githubusercontent.com/0lafe/redone_enemy_ai/refs/heads/main/meta.json"
+				"meta" : "https://raw.githubusercontent.com/0lafe/redone_ai/refs/heads/main/meta.json"
 			}
 		}
 	]
