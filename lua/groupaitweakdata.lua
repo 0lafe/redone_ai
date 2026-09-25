@@ -292,8 +292,6 @@ Hooks:PostHook(GroupAITweakData, "_init_enemy_spawn_groups", "RDAI_init_enemy_sp
 			"smoke_grenade",
 			"flash_grenade"
 		},
-		-- Replacing self._tactics wholesale drops vanilla's Phalanx and marshal
-		-- presets; the spawn groups below still reference them, so restore them.
 		Phalanx_minion = {
 			"smoke_grenade",
 			"charge",
@@ -1070,12 +1068,7 @@ Hooks:PostHook(GroupAITweakData, "_init_enemy_spawn_groups", "RDAI_init_enemy_sp
 		}
 	}
 	self.enemy_spawn_groups.FBI_spoocs = self.enemy_spawn_groups.single_spooc
-	-- self.enemy_spawn_groups = {} above wipes vanilla's table, and the task data
-	-- below still assigns assault/recon weights to Phalanx. _spawn_phalanx builds
-	-- { Phalanx = {1,1,1} } and _choose_best_groups requires the group to exist in
-	-- enemy_spawn_groups, so without this Captain Winters can never spawn.
-	-- self.phalanx.minions.amount is safe to read here: _init_task_data runs before
-	-- _init_enemy_spawn_groups in GroupAITweakData:init.
+
 	self.enemy_spawn_groups.Phalanx = {
 		amount = {
 			self.phalanx.minions.amount + 1,
@@ -1536,4 +1529,6 @@ Hooks:PostHook(GroupAITweakData, "_init_task_data", "RDAI_init_task_data", funct
 		0,
 		0
 	}
+
+	self.safehouse = deep_clone(self.besiege)
 end)
