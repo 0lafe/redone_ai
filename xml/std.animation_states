@@ -12,26 +12,6 @@
 			<key at="exit" set_extension="anim_data" extension_key="base_need_upd" extension_value="false"/>
 		</target>
 	</tweak>
-	<!-- Allow reloading while moving -->
-	<!-- has to be done twice -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/stand/move"/>
-			<keys/>
-			<key extension_key="base_no_reload"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/stand/move"/>
-			<keys/>
-			<key extension_key="base_no_reload"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
 	<!-- Navlink to crouch exit displacement fix -->
 	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
 		<search>
@@ -46,8 +26,8 @@
 	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
 		<search>
 			<xml/>
-			<state name="std/crouch/still/idle"/>
-			<from name="std/dodge"/>
+			<state name="std/stand"/>
+			<from_group name="std/dodge"/>
 		</search>
 		<target mode="attributes">
 			<attr name="blend" value="3"/>
@@ -64,25 +44,6 @@
 			<key at="enter" set_extension="anim_data" extension_key="base_need_upd" extension_value="true"/>
 			<key at="exit" set_extension="anim_data" extension_key="base_need_upd" extension_value="false"/>
 		</target>
-	</tweak>
-	<!-- has to be done twice -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/crouch/move"/>
-			<keys/>
-			<key extension_key="base_no_reload"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/crouch/move"/>
-			<keys/>
-			<key extension_key="base_no_reload"/>
-		</search>
-		<target mode="replace"/>
 	</tweak>
 	<!-- Dodge state fixes -->
 	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
@@ -111,47 +72,6 @@
 			<from_group name="std/crouch/still" blend="3"/>
 		</target>
 	</tweak>
-	<!-- Make medic heals an upper_body animation -->
-	<!-- Can't change it to upper_body/heal because of syncing fuckery -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/heal/heal"/>
-		</search>
-		<target mode="attributes">
-			<attr name="segment" value="upper_body"/>
-			<attr name="mute" value="upper_body_ext"/>
-		</target>
-	</tweak>
-	<!-- has to be done twice -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/heal/heal"/>
-			<keys/>
-			<key extension_key="pose"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/heal/heal"/>
-			<keys/>
-			<key extension_key="pose"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/heal/heal"/>
-			<exit/>
-		</search>
-		<target mode="replace">
-			<exit name="upper_body/empty"/>
-		</target>
-	</tweak>
 	<!-- Suppressed state fixes -->
 	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
 		<search>
@@ -176,114 +96,6 @@
 			<key at="exit" set_extension="anim_data" extension_key="base_need_upd" extension_value="false"/>
 		</target>
 	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/crouch/move/run/fumble"/>
-			<keys/>
-		</search>
-		<target mode="attach">
-			<key at="enter" set_extension="anim_data" extension_key="base_need_upd" extension_value="true"/>
-			<key at="exit" set_extension="anim_data" extension_key="base_need_upd" extension_value="false"/>
-		</target>
-	</tweak>
-	<!-- Concussion state fixes -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/stun/concussion"/>
-		</search>
-		<target mode="attach">
-			<keys timebase="relative">
-				<key at="enter" set_extension="anim_data" extension_key="hurt" extension_value="true"/>
-				<key at="exit" set_extension="anim_data" extension_key="hurt" extension_value="false"/>
-
-				<key at="0.7" set_extension="anim_data" extension_key="hurt_exit" extension_value="true"/>
-				<key at="exit" set_extension="anim_data" extension_key="hurt_exit" extension_value="false"/>
-
-				<key at="trigger" trigger="enable_ragdoll" set_extension="anim_data" extension_key="ragdoll" extension_value="true"/>
-				<key at="exit" set_extension="anim_data" extension_key="ragdoll" extension_value="false"/>
-			</keys>
-		</target>
-	</tweak>
-	<!-- ECM Feedback state fixes -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/sick/exit"/>
-			<to name="idle"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/sick/exit"/>
-			<keys/>
-			<key extension_key="hurt"/>
-		</search>
-		<target mode="attributes">
-			<attr name="at" value="exit"/>
-		</target>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/sick/exit"/>
-			<exit/>
-		</search>
-		<target mode="attributes">
-			<attr name="name" value="std/stand/still/idle/look"/>
-		</target>
-	</tweak>
-	<!-- Poison state fixes -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/poison/enter"/>
-		</search>
-		<target mode="attributes">
-			<attr name="type" value="once"/>
-		</target>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/poison/exit"/>
-		</search>
-		<target mode="attributes">
-			<attr name="type" value="once"/>
-		</target>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/poison/exit"/>
-			<to name="idle"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/poison/exit"/>
-			<keys/>
-			<key extension_key="hurt"/>
-		</search>
-		<target mode="attributes">
-			<attr name="at" value="exit"/>
-		</target>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="std/hurt/poison/exit"/>
-			<exit/>
-		</search>
-		<target mode="attributes">
-			<attr name="name" value="std/stand/still/idle/look"/>
-		</target>
-	</tweak>
 	<!-- Upper body blend fixes -->
 	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
 		<search>
@@ -303,30 +115,6 @@
 		</search>
 		<target mode="replace">
 			<from name="upper_body/crouch_reload" blend="0"/>
-		</target>
-	</tweak>
-	<!-- Fix recoil flag not being set on crouch autofire -->
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="upper_body/crh/recoil"/>
-		</search>
-		<target mode="replace"/>
-	</tweak>
-	<tweak version="2" name="anims/units/enemies/cop/std" extension="animation_states">
-		<search>
-			<xml/>
-			<state name="upper_body/std/recoil"/>
-		</search>
-		<target mode="append">
-			<state name="upper_body/crh/recoil" type="template_state" segment="upper_body">
-				<default blend="8" />
-				<keys>
-					<key at="enter" set_extension="anim_data" extension_key="recoil" extension_value="true"/>
-					<key at="exit" set_extension="anim_data" extension_key="recoil" extension_value="false"/>
-				</keys>
-				<exit name="upper_body/empty"/>
-			</state>
 		</target>
 	</tweak>
 	<!-- Bleedout state fixes -->
