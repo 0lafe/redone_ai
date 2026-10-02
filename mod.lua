@@ -1,4 +1,8 @@
 if not RDAI then
+	-- Prevent the fixes from touching copactionwalk
+	TheFixesPreventer = TheFixesPreventer or {}
+	TheFixesPreventer.cop_action_walk = true
+
 	RDAI = {
 		mod_path = ModPath,
 		save_path = SavePath .. "RDAI.txt",
