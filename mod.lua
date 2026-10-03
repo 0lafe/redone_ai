@@ -6,8 +6,7 @@ if not RDAI then
 	RDAI = {
 		mod_path = ModPath,
 		save_path = SavePath .. "RDAI.txt",
-		loc_path = ModPath .. "loc/english.txt",
-		options_path = ModPath .. "menu/options.txt",
+		options_path = ModPath .. "menu/options.json",
 		required = {},
 		settings = {
 			old_fades = false,

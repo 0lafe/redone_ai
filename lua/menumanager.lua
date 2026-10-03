@@ -1,5 +1,5 @@
 Hooks:Add("LocalizationManagerPostInit", "RDAI_LocalizationManagerPostInit", function(loc_manager)
-	loc_manager:load_localization_file(RDAI.loc_path)
+	loc_manager:load_localization_file(RDAI.mod_path .. "loc/english.json")
 end)
 
 Hooks:Add("MenuManagerInitialize", "RDAI_MenuManagerInitialize", function(menu_manager)
