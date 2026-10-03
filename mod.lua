@@ -15,7 +15,6 @@ if not RDAI then
 			masochism = false,
 			cover_wait_time = 2,
 			enemy_spawn_interval = 2,
-			spawngroups = true
 		}
 	}
 

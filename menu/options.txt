@@ -34,14 +34,6 @@
 			"value" : "old_fades"
 		},
 		{
-			"type" : "toggle",
-			"id" : "spawngroups",
-			"title" : "RDAI_spawngroups",
-			"description" : "RDAI_spawngroups_desc",
-			"callback" : "RDAI_check_clbk",
-			"value" : "spawngroups"
-		},
-		{
 			"type" : "slider",
 			"id" : "cover_wait_time",
 			"title" : "RDAI_cover_wait_time",

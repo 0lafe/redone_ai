@@ -3,11 +3,9 @@
 	<hooks script_path="mod.lua">
 		<post hook_id="lib/managers/group_ai_states/groupaistatebase"/>
 		<post hook_id="lib/managers/group_ai_states/groupaistatebesiege"/>
-		<post hook_id="lib/managers/mission/elementspawnenemygroup"/>
 		<post hook_id="lib/managers/mission/elementspecialobjective"/>
 		<post hook_id="lib/managers/enemymanager"/>
 		<post hook_id="lib/managers/menumanager"/>
-		<post hook_id="lib/tweak_data/groupaitweakdata"/>
 		<post hook_id="lib/units/civilians/logics/civilianlogictravel"/>
 		<post hook_id="lib/units/enemies/cop/copbrain"/>
 		<post hook_id="lib/units/enemies/cop/copmovement"/>
