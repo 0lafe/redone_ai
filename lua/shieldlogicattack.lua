@@ -33,7 +33,7 @@ function ShieldLogicAttack.queued_update(data)
 		return
 	end
 
-	if unit:anim_data().stand then
+	if unit:anim_data().stand and not unit:movement():chk_action_forbidden("walk") then
 		CopLogicAttack._chk_request_action_crouch(data)
 	end
 

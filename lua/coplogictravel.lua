@@ -67,7 +67,14 @@ Hooks:OverrideFunction(CopLogicTravel, "upd_advance", function(data)
 			end
 		end
 
-		if not my_data.processing_advance_path and not my_data.processing_coarse_path and (not my_data.cover_leave_t or t >= my_data.cover_leave_t and not unit:movement():chk_action_forbidden("walk") and not data.unit:anim_data().reload) then
+		if not my_data.processing_advance_path
+			and not my_data.processing_coarse_path
+			and (
+				not my_data.cover_leave_t
+				or t >= my_data.cover_leave_t
+				and not unit:movement():chk_action_forbidden("walk")
+				and not data.unit:anim_data().reload
+			) then
 			my_data.cover_leave_t = nil
 
 			if my_data.advance_path then
@@ -91,7 +98,12 @@ Hooks:OverrideFunction(CopLogicTravel, "upd_advance", function(data)
 				
 				CopLogicBase._exit(data.unit, wanted_state)
 			end
-		elseif data.attention_obj and REACT_SCARED <= data.attention_obj.reaction and (not my_data.best_cover or not my_data.best_cover[4]) and not unit:anim_data().crouch and (not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.crouch) then
+		elseif data.attention_obj
+			and REACT_SCARED <= data.attention_obj.reaction
+			and not unit:movement():chk_action_forbidden("walk")
+			and (not my_data.best_cover or not my_data.best_cover[4])
+			and not unit:anim_data().crouch
+			and (not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.crouch) then
 			CopLogicAttack._chk_request_action_crouch(data)
 		end
 	end
