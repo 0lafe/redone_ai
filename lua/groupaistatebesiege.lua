@@ -210,6 +210,23 @@ function GroupAIStateBesiege:_perform_group_spawning(spawn_task, force, use_last
 	end
 end
 
+-- Overwrite individual spawn point CD when mechanic wants it
+local original_intervals = {}
+Hooks:PreHook(GroupAIStateBesiege, "_perform_group_spawning", "RDAI_overwrite_spawn_intervals", function(self, spawn_task, ...)
+	for _, sp_data in pairs(spawn_task.spawn_group.spawn_pts) do
+		local original_interval = original_intervals[sp_data]
+
+		if not original_interval then
+			original_interval = sp_data.interval
+			original_intervals[sp_data] = original_interval
+		end
+
+		if RDAI.settings.spawn_mechanic == "increased" then
+			sp_data.interval = 1
+		end
+	end
+end)
+
 function GroupAIStateBesiege:_assign_enemy_groups_to_assault(phase)
 	for group_id, group in pairs_g(self._groups) do
 		if group.has_spawned and group.objective.type == "assault_area" then
