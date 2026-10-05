@@ -1,28 +1,19 @@
 local math_lerp = math.lerp
-local math_min = math.min
 local math_random = math.random
 local mvec3_copy = mvector3.copy
-local mvec3_distance = mvector3.distance
 local mvec3_distance_sq = mvector3.distance_sq
 local next_g = next
-local ipairs_g = ipairs
 local pairs_g = pairs
 local table_insert = table.insert
 local table_remove = table.remove
 
-function GroupAIStateBesiege:_queue_police_upd_task()
-	if not self._police_upd_task_queued then
-		self._police_upd_task_queued = true
+-- Tick rate for upd_police_activity normally
+GroupAIStateBesiege._POLICE_ACTIVITY_DELAY = 0.5
+-- When spawns are queued
+GroupAIStateBesiege._POLICE_ACTIVITY_DELAY_FAST = 0.4
 
-		managers.enemy:queue_task("GroupAIStateBesiege._upd_police_activity", self._upd_police_activity, self, self._t + 0.5)
-	end
-end
-
-GroupAIStateBesiege.on_enemy_unregistered = nil
-
+-- Slight reordering of vanilla (not sure why yet)
 function GroupAIStateBesiege:_upd_police_activity()
-	self._police_upd_task_queued = false
-
 	if not self._police_activity_blocked then
 		if self._ai_enabled then
 			self:_upd_SO()
@@ -42,13 +33,20 @@ function GroupAIStateBesiege:_upd_police_activity()
 				self:_upd_groups()
 			end
 		end
-
-		self:_queue_police_upd_task()
 	end
 end
 
-local upd_assault_task = GroupAIStateBesiege._upd_assault_task
+-- Allow reenforce tasks to run more often
+local next_dispatch_t_backup
+Hooks:PreHook(GroupAIStateBesiege, "_begin_reenforce_task", "RDAI_prevent_next_dispatch_t_pre", function(self, ...)
+	next_dispatch_t_backup = self._task_data.reenforce.next_dispatch_t
+end)
+Hooks:PostHook(GroupAIStateBesiege, "_begin_reenforce_task", "RDAI_prevent_next_dispatch_t_post", function(self, ...)
+	self._task_data.reenforce.next_dispatch_t = next_dispatch_t_backup
+end)
 
+-- Old fade logic overwrite when enabled
+local upd_assault_task = GroupAIStateBesiege._upd_assault_task
 function GroupAIStateBesiege:_upd_assault_task(...)
 	local task_data = self._task_data.assault
 
@@ -56,7 +54,7 @@ function GroupAIStateBesiege:_upd_assault_task(...)
 		return
 	end
 
-	if task_data.phase ~= "fade" or self._hunt_mode then
+	if task_data.phase ~= "fade" or self._hunt_mode or not RDAI.settings.old_fades or managers.skirmish:is_skirmish() then
 		return upd_assault_task(self, ...)
 	end
 
@@ -66,24 +64,14 @@ function GroupAIStateBesiege:_upd_assault_task(...)
 
 	local end_assault = false
 
-	if RDAI.settings.old_fades and not managers.skirmish:is_skirmish() then
-		if self:_count_police_force("assault") < 7 or t > task_data.phase_end_t + 350 then
-			if t > task_data.phase_end_t - 8 and not task_data.said_retreat then
-				if self._drama_data.amount < tweak_data.drama.assault_fade_end then
-					task_data.said_retreat = true
+	if self:_count_police_force("assault") < 7 or t > task_data.phase_end_t + 350 then
+		if t > task_data.phase_end_t - 8 and not task_data.said_retreat then
+			if self._drama_data.amount < tweak_data.drama.assault_fade_end then
+				task_data.said_retreat = true
 
-					self:_police_announce_retreat()
-				end
-			elseif t > task_data.phase_end_t and self._drama_data.amount < tweak_data.drama.assault_fade_end and self:_count_criminals_engaged_force(4) <= 3 then
-				end_assault = true
+				self:_police_announce_retreat()
 			end
-		end
-	elseif self:_count_police_force("assault") < 50 or t > task_data.phase_end_t + (managers.skirmish:is_skirmish() and 0 or 30) then
-		if not task_data.said_retreat then
-			task_data.said_retreat = true
-
-			self:_police_announce_retreat()
-		elseif t > task_data.phase_end_t and (self._drama_data.amount < tweak_data.drama.assault_fade_end and self:_count_criminals_engaged_force(11) <= 10 or t > task_data.phase_end_t + (managers.skirmish:is_skirmish() and 0 or 60)) then
+		elseif t > task_data.phase_end_t and self._drama_data.amount < tweak_data.drama.assault_fade_end and self:_count_criminals_engaged_force(4) <= 3 then
 			end_assault = true
 		end
 	end
@@ -153,242 +141,74 @@ function GroupAIStateBesiege:_upd_assault_task(...)
 	self:_assign_enemy_groups_to_assault(task_data.phase)
 end
 
-function GroupAIStateBesiege:_begin_reenforce_task(reenforce_area)
-	local new_task = {
-		use_spawn_event = true,
-		target_area = reenforce_area,
-		start_t = self._t
-	}
+-- Overwrite spawn point cooldowns based on spawn mode choice
+Hooks:PostHook(GroupAIStateBesiege, "_choose_best_group", "RDAI_set_spawnpoint_cooldowns", function(self, ...)
+	local spawn_group = Hooks:GetReturn()
 
-	table_insert(self._task_data.reenforce.tasks, new_task)
-
-	self._task_data.reenforce.active = true
-end
-
-function GroupAIStateBesiege:_find_spawn_group_near_area(target_area, allowed_groups, target_pos, max_dis, verify_clbk)
-	target_pos = target_pos or target_area.pos
-
-	local t = self._t
-	local valid_spawn_groups = {}
-	local valid_spawn_group_distances = {}
-
-	for area_id, area in pairs_g(self._area_data) do
-		local spawn_groups = area.spawn_groups
-
-		if spawn_groups then
-			for i = 1, #spawn_groups do
-				local spawn_group = spawn_groups[i]
-
-				if t >= spawn_group.delay_t and (not verify_clbk or verify_clbk(spawn_group)) then
-					local dis_id = spawn_group.nav_seg .. "-" .. target_area.pos_nav_seg
-					local my_dis = self._graph_distance_cache[dis_id]
-
-					if not my_dis then
-						local path = managers.navigation:search_coarse({
-							access_pos = "swat",
-							from_seg = spawn_group.nav_seg,
-							to_seg = target_area.pos_nav_seg,
-							id = dis_id
-						})
-
-						if path and #path >= 2 then
-							local total_dis = 0
-							local current = spawn_group.pos
-
-							for i = 2, #path do
-								local nxt = path[i][2]
-
-								if current and nxt then
-									total_dis = total_dis + mvec3_distance(current, nxt)
-								end
-
-								current = nxt
-							end
-
-							my_dis = total_dis
-							self._graph_distance_cache[dis_id] = total_dis
-						end
-					end
-
-					if my_dis and (not max_dis or my_dis < max_dis) then
-						local id = spawn_group.mission_element:id()
-
-						valid_spawn_groups[id] = spawn_group
-						valid_spawn_group_distances[id] = my_dis
-					end
-				end
-			end
-		end
-	end
-
-	if not next_g(valid_spawn_groups) then
+	if not spawn_group then
 		return
 	end
 
-	local total_weight = 0
-	local candidate_groups = {}
+	local id = spawn_group.mission_element:id()
 
-	for i, dis in pairs_g(valid_spawn_group_distances) do
-		local spawn_group = valid_spawn_groups[i]
-
-		spawn_group.distance = dis
-		total_weight = total_weight + self:_choose_best_groups(candidate_groups, spawn_group, spawn_group.mission_element:spawn_groups(), allowed_groups, math_lerp(1, 0.2, math_min(1, dis / 5000)) * 5)
+	if RDAI.settings.spawn_mechanic == "240_3" then
+		self._spawn_group_timers[id] = self._t + 5
+	elseif RDAI.settings.spawn_mechanic == "pre_240_3" then
+		self._spawn_group_timers[id] = self._t + math.random(15, 20)
+	elseif RDAI.settings.spawn_mechanic == "increased" then
+		self._spawn_group_timers[id] = self._t + 1
 	end
+end)
 
-	if total_weight == 0 then
-		return
-	end
+-- Conditionally overwrite all spawn point CD's when none are available
+local find_spawn_group_near_area = GroupAIStateBesiege._find_spawn_group_near_area
+function GroupAIStateBesiege:_find_spawn_group_near_area(...)
+	local spawn_group, spawn_group_type = find_spawn_group_near_area(self, ...)
 
-	return self:_choose_best_group(candidate_groups, total_weight)
-end
+	if not spawn_group and (RDAI.settings.spawn_mechanic == "pre_240_3" or RDAI.settings.spawn_mechanic == "increased") then
+		local timers = self._spawn_group_timers
+		local t = self._t
+		local blocked
 
-local upd_group_spawning = GroupAIStateBesiege._upd_group_spawning
-
-function GroupAIStateBesiege:_upd_group_spawning(...)
-	if self._t > (self._next_spawn_t or 0) then
-		upd_group_spawning(self, ...)
-
-		self._next_spawn_t = self._t + (next(self._spawning_groups) and 0.5 or RDAI.settings.enemy_spawn_interval)
-	end
-end
-
-Hooks:OverrideFunction(GroupAIStateBesiege, "_perform_group_spawning", function(self, spawn_task, force, use_last)
-	local nr_units_spawned = 0
-	local produce_data = {
-		name = true,
-		spawn_ai = {}
-	}
-	local unit_categories = tweak_data.group_ai.unit_categories
-	local spawn_pts = spawn_task.spawn_group.spawn_pts
-
-	local function _try_spawn_unit(u_type_name, spawn_entry)
-		if not RDAI.settings.masochism and GroupAIStateBesiege._MAX_SIMULTANEOUS_SPAWNS <= nr_units_spawned and not force then
-			return
-		end
-
-		local hopeless = true
-		local current_unit_type = tweak_data.levels:get_ai_group_type()
-
-		for i = 1, #spawn_pts do
-			local sp_data = spawn_pts[i]
-			local category = unit_categories[u_type_name]
-
-			if (sp_data.accessibility == "any" or category.access[sp_data.accessibility]) and (not sp_data.amount or sp_data.amount > 0) and sp_data.mission_element:enabled() then
-				hopeless = false
-
-				if sp_data.delay_t < self._t then
-					local units = category.unit_types[current_unit_type]
-
-					produce_data.name = managers.modifiers:modify_value("GroupAIStateBesiege:SpawningUnit", units[math_random(#units)])
-
-					local spawned_unit = sp_data.mission_element:produce(produce_data)
-					local u_key = spawned_unit:key()
-					local objective
-
-					if spawn_task.objective then
-						objective = self.clone_objective(spawn_task.objective)
-					else
-						objective = spawn_task.group.objective.element:get_random_SO(spawned_unit)
-
-						if not objective then
-							spawned_unit:set_slot(0)
-
-							return true
-						end
-
-						objective.grp_objective = spawn_task.group.objective
-					end
-
-					local u_data = self._police[u_key]
-
-					self:set_enemy_assigned(objective.area, u_key)
-
-					if spawn_entry.tactics then
-						u_data.tactics = spawn_entry.tactics
-						u_data.tactics_map = {}
-
-						for _, tactic_name in ipairs_g(u_data.tactics) do
-							u_data.tactics_map[tactic_name] = true
-						end
-					end
-
-					spawned_unit:brain():set_spawn_entry(spawn_entry, u_data.tactics_map)
-
-					u_data.rank = spawn_entry.rank
-
-					self:_add_group_member(spawn_task.group, u_key)
-
-					if spawned_unit:brain():is_available_for_assignment(objective) then
-						if objective.element then
-							objective.element:clbk_objective_administered(spawned_unit)
-						end
-
-						spawned_unit:brain():set_objective(objective)
-					else
-						spawned_unit:brain():set_followup_objective(objective)
-					end
-
-					nr_units_spawned = nr_units_spawned + 1
-
-					if spawn_task.ai_task then
-						spawn_task.ai_task.force_spawned = spawn_task.ai_task.force_spawned + 1
-						spawned_unit:brain()._logic_data.spawned_in_phase = spawn_task.ai_task.phase
-					end
-
-					sp_data.delay_t = self._t + sp_data.interval
-
-					if sp_data.amount then
-						sp_data.amount = sp_data.amount - 1
-					end
-
-					return true
-				end
-			end
-		end
-
-		if hopeless then
-			return true
-		end
-	end
-
-	local complete = true
-
-	for u_type_name, spawn_info in pairs_g(spawn_task.units_remaining) do
-		if not unit_categories[u_type_name].access.acrobatic then
-			for i = spawn_info.amount, 1, -1 do
-				if _try_spawn_unit(u_type_name, spawn_info.spawn_entry) then
-					spawn_info.amount = spawn_info.amount - 1
-				else
-					complete = false
-
-					break
-				end
-			end
-		end
-	end
-
-	for u_type_name, spawn_info in pairs_g(spawn_task.units_remaining) do
-		for i = spawn_info.amount, 1, -1 do
-			if _try_spawn_unit(u_type_name, spawn_info.spawn_entry) then
-				spawn_info.amount = spawn_info.amount - 1
-			else
-				complete = false
+		for _, cooldown in pairs(timers) do
+			if cooldown > t then
+				blocked = true
 
 				break
 			end
 		end
-	end
 
-	if complete then
-		spawn_task.group.has_spawned = true
+		if blocked then
+			self._spawn_group_timers = {}
 
-		table_remove(self._spawning_groups, use_last and #self._spawning_groups or 1)
-
-		if spawn_task.group.size <= 0 then
-			self._groups[spawn_task.group.id] = nil
+			spawn_group, spawn_group_type = find_spawn_group_near_area(self, ...)
 		end
 	end
-end)
+
+	return spawn_group, spawn_group_type
+end
+
+-- Throttle spawning based on spawn mechanic selected
+-- Needed because base update loop runs faster than vanilla
+local upd_group_spawning = GroupAIStateBesiege._upd_group_spawning
+function GroupAIStateBesiege:_upd_group_spawning(...)
+	if self._t > (self._next_spawn_t or 0) then
+		upd_group_spawning(self, ...)
+
+		self._next_spawn_t = self._t + (next(self._spawning_groups) and GroupAIStateBesiege._POLICE_ACTIVITY_DELAY_FAST or RDAI:enemy_spawn_interval())
+	end
+end
+
+-- Can use >3 spawn points at once if increased spawns is enabled
+-- Original mod also allowed multiple of the same unit to spawn at once. I might add that back later
+local perform_group_spawning = GroupAIStateBesiege._perform_group_spawning
+function GroupAIStateBesiege:_perform_group_spawning(spawn_task, force, use_last)
+	if RDAI.settings.spawn_mechanic == "increased" then
+		perform_group_spawning(self, spawn_task, true, use_last)
+	else
+		perform_group_spawning(self, spawn_task, force, use_last)
+	end
+end
 
 function GroupAIStateBesiege:_assign_enemy_groups_to_assault(phase)
 	for group_id, group in pairs_g(self._groups) do

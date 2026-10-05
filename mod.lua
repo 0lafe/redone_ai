@@ -13,7 +13,7 @@ if not RDAI then
 			ai_tickrate = 60,
 			masochism = false,
 			cover_wait_time = 2,
-			enemy_spawn_interval = 2,
+			spawn_mechanic = "vanilla"
 		}
 	}
 
@@ -41,6 +41,14 @@ if not RDAI then
 		if file then
 			file:write(json.encode(self.settings))
 			file:close()
+		end
+	end
+
+	function RDAI:enemy_spawn_interval()
+		if self.settings.spawn_mechanic == "increased" then
+			return 0.5
+		else
+			return 2
 		end
 	end
 

@@ -11,6 +11,10 @@ Hooks:Add("MenuManagerInitialize", "RDAI_MenuManagerInitialize", function(menu_m
 		RDAI.settings[item:name()] = item:value()
 	end
 
+	function MenuCallbackHandler:RDAI_choice_clbk(item)
+		RDAI.settings[item:name()] = item:value()
+	end
+
 	function MenuCallbackHandler:RDAI_callback_options_closed()
 		RDAI:save()
 	end

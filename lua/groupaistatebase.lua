@@ -40,21 +40,6 @@ function GroupAIStateBase:on_criminal_nav_seg_change(unit, nav_seg_id)
 	end
 end
 
-Hooks:PostHook(GroupAIStateBase, "on_enemy_unregistered", "RDAI_on_enemy_unregistered", function(self, unit)
-	if self._is_server then
-		self:set_enemy_assigned(nil, unit:key())
-
-		local objective = unit:brain():objective()
-		local fail_clbk = objective and objective.fail_clbk
-
-		if fail_clbk then
-			objective.fail_clbk = nil
-
-			fail_clbk(unit)
-		end
-	end
-end)
-
 function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	if not self:is_detection_persistent() then
 		return
@@ -104,5 +89,13 @@ function GroupAIStateBase:_merge_coarse_path_by_area(coarse_path)
 		end
 
 		i_nav_seg = i_nav_seg - 1
+	end
+end
+
+-- remove spawn point camping penalty for some spawn mechanics
+local chk_spawn_point_camped = GroupAIStateBase._chk_spawn_point_camped
+function GroupAIStateBase:_chk_spawn_point_camped(...)
+	if not (RDAI.settings.spawn_mechanic == "pre_240_3" or RDAI.settings.spawn_mechanic == "240_3") then
+		chk_spawn_point_camped(self, ...)
 	end
 end
