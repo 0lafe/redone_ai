@@ -14,7 +14,8 @@ if not RDAI then
 			masochism = false,
 			cover_wait_time = 2,
 			spawn_mechanic = "vanilla",
-			aggressive_objectives = false
+			aggressive_objectives = false,
+			stronger_assaults = false
 		}
 	}
 
