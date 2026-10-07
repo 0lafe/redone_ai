@@ -153,10 +153,8 @@ Hooks:PostHook(GroupAIStateBesiege, "_choose_best_group", "RDAI_set_spawnpoint_c
 
 	if RDAI.settings.spawn_mechanic == "240_3" then
 		self._spawn_group_timers[id] = self._t + 5
-	elseif RDAI.settings.spawn_mechanic == "pre_240_3" then
+	elseif RDAI.settings.spawn_mechanic == "pre_240_3" or RDAI.settings.spawn_mechanic == "increased" then
 		self._spawn_group_timers[id] = self._t + math.random(15, 20)
-	elseif RDAI.settings.spawn_mechanic == "increased" then
-		self._spawn_group_timers[id] = self._t + 1
 	end
 end)
 
