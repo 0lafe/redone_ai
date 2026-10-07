@@ -24,6 +24,7 @@
 		<post hook_id="lib/units/enemies/tank/logics/tankcoplogicattack"/>
 		<post hook_id="lib/units/enemies/taser/logics/taserlogicattack"/>
 		<post hook_id="lib/units/player_team/logics/teamailogictravel"/>
+		<post hook_id="lib/units/props/drill"/>
 	</hooks>
 
 	<tweak definition="xml/std.animation_states"/>

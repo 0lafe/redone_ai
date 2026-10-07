@@ -13,7 +13,8 @@ if not RDAI then
 			ai_tickrate = 60,
 			masochism = false,
 			cover_wait_time = 2,
-			spawn_mechanic = "vanilla"
+			spawn_mechanic = "vanilla",
+			aggressive_objectives = false
 		}
 	}
 
