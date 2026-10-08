@@ -99,3 +99,13 @@ function GroupAIStateBase:_chk_spawn_point_camped(...)
 		chk_spawn_point_camped(self, ...)
 	end
 end
+
+-- Only max diff assaults when enabled
+local set_difficulty = GroupAIStateBase.set_difficulty
+function GroupAIStateBase:set_difficulty(value)
+	if value > 0 and RDAI.settings.stronger_assaults then
+		set_difficulty(self, 1)
+	else
+		set_difficulty(self, value)
+	end
+end

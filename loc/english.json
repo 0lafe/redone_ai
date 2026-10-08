@@ -18,5 +18,8 @@
 	"RDAI_spawn_mechanic_desc": "Chose between different methods of spawns\nIncluding the current spawn option, better legacy options, and a modded increased value",
 
 	"RDAI_aggressive_objectives": "Aggressive Objectives",
-	"RDAI_aggressive_objectives_desc": "Allows cops to more aggressivley interact with objectives\nThings like disabling drills, hacks, etc"
+	"RDAI_aggressive_objectives_desc": "Allows cops to more aggressivley interact with objectives\nThings like disabling drills, hacks, etc",
+
+	"RDAI_stronger_assaults": "Stronger Assaults",
+	"RDAI_stronger_assaults_desc": "Starts most assaults at max difficulty\nSome map based tweaks to cut down on waiting as well"
 }

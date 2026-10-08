@@ -74,6 +74,14 @@
 			"description": "RDAI_aggressive_objectives_desc",
 			"callback": "RDAI_check_clbk",
 			"value": "aggressive_objectives"
+		},
+		{
+			"type": "toggle",
+			"id": "stronger_assaults",
+			"title": "RDAI_stronger_assaults",
+			"description": "RDAI_stronger_assaults_desc",
+			"callback": "RDAI_check_clbk",
+			"value": "stronger_assaults"
 		}
 	]
 }
