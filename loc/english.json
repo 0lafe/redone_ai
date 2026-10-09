@@ -1,25 +1,22 @@
 {
-	"RDAI_options": "Redone AI",
-	"RDAI_options_desc": "Configure Redone AI",
+  "RDAI_options": "Redone AI",
+  "RDAI_options_desc": "Configure Redone AI",
 
-	"RDAI_ai_tickrate": "Enemy AI Tickrate",
-	"RDAI_ai_tickrate_desc": "Adjusts the amount of enemy logic updates that can be done per second\nHigher values are more difficult but may impact performance. Vanilla default is 60",
+  "RDAI_ai_tickrate": "Enemy AI Tickrate",
+  "RDAI_ai_tickrate_desc": "Adjusts the amount of enemy logic updates that can be done per second\nHigher values are more difficult but may impact performance",
 
-	"RDAI_masochism": "Masochism Mode",
-	"RDAI_masochism_desc": "Enemies will be allowed to path ahead and will no longer have any movement delays\nKeeping them constantly on the move",
+  "RDAI_masochism": "Masochism Mode",
+  "RDAI_masochism_desc": "Enemies will be allowed to path ahead and will no longer have any movement delays\nKeeping them constantly on the move",
 
-	"RDAI_old_fades": "Old Fade Behaviour",
-	"RDAI_old_fades_desc": "Restores assault fades to the way they worked prior to U173",
+  "RDAI_old_fades": "Old Fade Behaviour",
+  "RDAI_old_fades_desc": "Restores assault fades to the way they worked prior to U173",
 
-	"RDAI_cover_wait_time": "Enemy Cover Wait Time",
-	"RDAI_cover_wait_time_desc": "Adjusts the minimum amount of time (in seconds) enemies will wait in cover before advancing\nThe maximum amount of time is calculated as minimum * 1.5",
+  "RDAI_spawn_mechanic": "Spawn Logic",
+  "RDAI_spawn_mechanic_desc": "Chose between different methods of spawns\nIncluding the current spawn option, better legacy options, and a modded increased value",
 
-	"RDAI_spawn_mechanic": "Spawn Logic",
-	"RDAI_spawn_mechanic_desc": "Chose between different methods of spawns\nIncluding the current spawn option, better legacy options, and a modded increased value",
+  "RDAI_aggressive_objectives": "Aggressive Objectives",
+  "RDAI_aggressive_objectives_desc": "Allows cops to more aggressivley interact with objectives\nThings like disabling drills, hacks, etc",
 
-	"RDAI_aggressive_objectives": "Aggressive Objectives",
-	"RDAI_aggressive_objectives_desc": "Allows cops to more aggressivley interact with objectives\nThings like disabling drills, hacks, etc",
-
-	"RDAI_stronger_assaults": "Stronger Assaults",
-	"RDAI_stronger_assaults_desc": "Starts most assaults at max difficulty\nSome map based tweaks to cut down on waiting as well"
+  "RDAI_stronger_assaults": "Stronger Assaults",
+  "RDAI_stronger_assaults_desc": "Starts most assaults at max difficulty\nSome map based tweaks to cut down on waiting as well"
 }

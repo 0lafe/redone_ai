@@ -12,7 +12,6 @@ if not RDAI then
 			old_fades = false,
 			ai_tickrate = 60,
 			masochism = false,
-			cover_wait_time = 2,
 			spawn_mechanic = "vanilla",
 			aggressive_objectives = false,
 			stronger_assaults = false

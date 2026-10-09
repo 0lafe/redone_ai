@@ -1,87 +1,65 @@
 {
-	"menu_id": "RDAI_options_menu",
-	"parent_menu_id": "blt_options",
-	"title": "RDAI_options",
-	"description": "RDAI_options_desc",
-	"back_callback": "RDAI_callback_options_closed",
-	"items": [
-		{
-			"type": "slider",
-			"id": "ai_tickrate",
-			"title": "RDAI_ai_tickrate",
-			"description": "RDAI_ai_tickrate_desc",
-			"callback": "RDAI_slider_clbk",
-			"value": "ai_tickrate",
-			"default_value": 60,
-			"min": 60,
-			"max": 1000,
-			"step": 10
-		},
-		{
-			"type": "toggle",
-			"id": "masochism",
-			"title": "RDAI_masochism",
-			"description": "RDAI_masochism_desc",
-			"callback": "RDAI_check_clbk",
-			"value": "masochism"
-		},
-		{
-			"type": "toggle",
-			"id": "old_fades",
-			"title": "RDAI_old_fades",
-			"description": "RDAI_old_fades_desc",
-			"callback": "RDAI_check_clbk",
-			"value": "old_fades"
-		},
-		{
-			"type": "multiple_choice",
-			"id": "spawn_mechanic",
-			"title": "RDAI_spawn_mechanic",
-			"description": "RDAI_spawn_mechanic_desc",
-			"callback": "RDAI_choice_clbk",
-			"items": [
-				"Vanilla",
-				"Pre 240.3",
-				"240.3",
-				"Increased"
-			],
-			"item_values": [
-				"vanilla",
-				"pre_240_3",
-				"240_3",
-				"increased"
-			],
-			"value": "spawn_mechanic",
-			"default_value": "vanilla",
-			"localized_items": false
-		},
-		{
-			"type": "slider",
-			"id": "cover_wait_time",
-			"title": "RDAI_cover_wait_time",
-			"description": "RDAI_cover_wait_time_desc",
-			"callback": "RDAI_slider_clbk",
-			"value": "cover_wait_time",
-			"default_value": 2,
-			"min": 0,
-			"max": 4,
-			"step": 0.5
-		},
-		{
-			"type": "toggle",
-			"id": "aggressive_objectives",
-			"title": "RDAI_aggressive_objectives",
-			"description": "RDAI_aggressive_objectives_desc",
-			"callback": "RDAI_check_clbk",
-			"value": "aggressive_objectives"
-		},
-		{
-			"type": "toggle",
-			"id": "stronger_assaults",
-			"title": "RDAI_stronger_assaults",
-			"description": "RDAI_stronger_assaults_desc",
-			"callback": "RDAI_check_clbk",
-			"value": "stronger_assaults"
-		}
-	]
+  "menu_id": "RDAI_options_menu",
+  "parent_menu_id": "blt_options",
+  "title": "RDAI_options",
+  "description": "RDAI_options_desc",
+  "back_callback": "RDAI_callback_options_closed",
+  "items": [
+    {
+      "type": "multiple_choice",
+      "id": "ai_tickrate",
+      "title": "RDAI_ai_tickrate",
+      "description": "RDAI_ai_tickrate_desc",
+      "callback": "RDAI_choice_clbk",
+      "items": ["60 (Vanilla and Slowest)", "120", "1000 (Fastest)"],
+      "item_values": [60, 120, 1000],
+      "value": "ai_tickrate",
+      "default_value": 60,
+      "localized_items": false
+    },
+    {
+      "type": "toggle",
+      "id": "masochism",
+      "title": "RDAI_masochism",
+      "description": "RDAI_masochism_desc",
+      "callback": "RDAI_check_clbk",
+      "value": "masochism"
+    },
+    {
+      "type": "toggle",
+      "id": "old_fades",
+      "title": "RDAI_old_fades",
+      "description": "RDAI_old_fades_desc",
+      "callback": "RDAI_check_clbk",
+      "value": "old_fades"
+    },
+    {
+      "type": "multiple_choice",
+      "id": "spawn_mechanic",
+      "title": "RDAI_spawn_mechanic",
+      "description": "RDAI_spawn_mechanic_desc",
+      "callback": "RDAI_choice_clbk",
+      "items": ["Vanilla", "Pre 240.3", "240.3", "Increased"],
+      "item_values": ["vanilla", "pre_240_3", "240_3", "increased"],
+      "value": "spawn_mechanic",
+      "default_value": "vanilla",
+      "localized_items": false
+    },
+    {
+      "type": "toggle",
+      "id": "aggressive_objectives",
+      "title": "RDAI_aggressive_objectives",
+      "description": "RDAI_aggressive_objectives_desc",
+      "callback": "RDAI_check_clbk",
+      "value": "aggressive_objectives"
+    },
+    {
+      "type": "toggle",
+      "id": "stronger_assaults",
+      "title": "RDAI_stronger_assaults",
+      "description": "RDAI_stronger_assaults_desc",
+      "callback": "RDAI_check_clbk",
+      "value": "stronger_assaults"
+    }
+  ]
 }
