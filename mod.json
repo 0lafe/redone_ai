@@ -3,7 +3,7 @@
   "description": "Reworks enemy AI to fix broken functionality and generally make enemies more active.",
   "author": "Lafe",
   "contact": "N/A",
-  "version": "1.5",
+  "version": "1.6",
   "priority": "-10",
   "color": "0 0 1",
   "blt_version": 2,
