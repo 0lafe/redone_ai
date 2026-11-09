@@ -49,6 +49,10 @@ Hooks:PostHook(ElementSpecialObjective, "on_executed", "RDAI_aggressive_sabotage
 	local data = so.data
 	local objective = data.objective
 
+	if not objective.pos and not objective.nav_seg then
+		return
+	end
+
 	data.search_dis_sq = 10000 * 10000
 	data.verification_clbk = sabotage_verification
 	data.access = without_snipers(data.access)
